@@ -1,0 +1,21 @@
+version: "3"
+services:
+        app:
+                build:
+                        context: .
+                        dockerfile: Dockerfile-app
+                container_name: WS2
+                depends_on:
+                        - db
+                ports:
+                        - "3000"
+        db:
+                build:
+                        context: .
+                        dockerfile: Dockerfile-db
+                restart: always
+                environment:
+                        POSTGRES_PASSWORD: passwd2
+                        POSTGRES_USER: ws2
+                        POSTGRES_DB: service
+

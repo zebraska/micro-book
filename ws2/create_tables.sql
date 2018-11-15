@@ -1,5 +1,4 @@
-DROP TABLE public."Emprunt";
-
+DROP TABLE public."Emprunt" IF NOT EXISTS;
 CREATE TABLE public."Emprunt"
 (
     id integer NOT NULL,
@@ -14,4 +13,4 @@ WITH (
 TABLESPACE pg_default;
 
 ALTER TABLE public."Emprunt"
-    OWNER to ripoul;
+    OWNER to ws_user;
