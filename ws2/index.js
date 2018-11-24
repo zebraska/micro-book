@@ -4,7 +4,7 @@ const pg = require('pg');
 const path = require('path');
 const bodyParser = require('body-parser')
 const app = express()
-const connectionString = 'postgresql://ripoul:Motherlode0@localhost:5432/service';
+const connectionString = 'postgresql://ws2:passwd2@localhost:5432/service';
 const baseUri = '/api/v1/emprunt'
 
 app.use(bodyParser.json());
