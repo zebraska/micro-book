@@ -67,12 +67,10 @@ app.get(baseUri, (req, res) => {
 });
 
 /* UPDATE */
-app.put(baseUri+':id', (req, res) => {
+app.put(baseUri, (req, res) => {
     const results = [];
-    // Grab data from the URL parameters
-    const id = req.params.id;
     // Grab data from http request
-    const data = { nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
+    const data = { id: req.body.id, nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
@@ -82,8 +80,8 @@ app.put(baseUri+':id', (req, res) => {
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Update Data
-        client.query('UPDATE public."Emprunt" SET nom=($1), prenom=($2), livre=($3) WHERE id=($4)',
-            [data.nom, data.prenom, data.livre, id]);
+        client.query('UPDATE public."Emprunt" SET nom=($1), prenom=($2), livre_id=($3) WHERE id=($4)',
+            [data.nom, data.prenom, data.livre, data.id]);
         // SQL Query > Select Data
         const query = client.query("SELECT * FROM public.\"Emprunt\"");
         // Stream results back one row at a time
@@ -99,10 +97,10 @@ app.put(baseUri+':id', (req, res) => {
 });
 
 /* DELETE */
-app.delete(baseUri+':id', (req, res) => {
+app.delete(baseUri, (req, res) => {
     const results = [];
     // Grab data from the URL parameters
-    const id = req.params.todo_id;
+    const id = req.body.id;
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, (err, client, done) => {
       // Handle connection errors
