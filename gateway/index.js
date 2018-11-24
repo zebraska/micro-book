@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded());
 app.get(baseUriLivre, (req, response) => {
     request(APILivre, { json: true }, (err, res, body) => {
         if (err) {
-            return response.status(500).json({success: false, data: err});
+            return response.status(500).json({ success: false, data: err });
         }
         return response.json(body);
     });
@@ -26,11 +26,11 @@ app.get(baseUriLivre, (req, response) => {
 app.post(baseUriLivre, (req, response) => {
     const data = { id: req.body.id, titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
     if (!data.id || !data.auteur || !data.quantite || !data.resume || !data.titre) {
-        return response.status(500).json({success: false, data: 'missing parameter'});
+        return response.status(500).json({ success: false, data: 'missing parameter' });
     }
-    request({ url: APILivre, method: 'POST', json: data}, (err, res, body) => {
+    request({ url: APILivre, method: 'POST', json: data }, (err, res, body) => {
         if (err) {
-            return response.status(500).json({success: false, data: err});
+            return response.status(500).json({ success: false, data: err });
         }
         return response.json(body);
     });
@@ -40,11 +40,11 @@ app.post(baseUriLivre, (req, response) => {
 app.put(baseUriLivre, (req, response) => {
     const data = { id: req.body.id, titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
     if (!data.id || !data.auteur || !data.quantite || !data.resume || !data.titre) {
-        return response.status(500).json({success: false, data: 'missing parameter'});
+        return response.status(500).json({ success: false, data: 'missing parameter' });
     }
-    request({ url: APILivre, method: 'PUT', json: data}, (err, res, body) => {
+    request({ url: APILivre, method: 'PUT', json: data }, (err, res, body) => {
         if (err) {
-            return response.status(500).json({success: false, data: err});
+            return response.status(500).json({ success: false, data: err });
         }
         return response.json(body);
     });
@@ -53,12 +53,12 @@ app.put(baseUriLivre, (req, response) => {
 //delete livre
 app.delete(baseUriLivre, (req, response) => {
     const data = { id: req.body.id };
-    if (!data.id ) {
-        return response.status(500).json({success: false, data: 'missing parameter'});
+    if (!data.id) {
+        return response.status(500).json({ success: false, data: 'missing parameter' });
     }
-    request({ url: APILivre, method: 'DELETE', json: data}, (err, res, body) => {
+    request({ url: APILivre, method: 'DELETE', json: data }, (err, res, body) => {
         if (err) {
-            return response.status(500).json({success: false, data: err});
+            return response.status(500).json({ success: false, data: err });
         }
         return response.json(body);
     });
@@ -68,8 +68,8 @@ app.delete(baseUriLivre, (req, response) => {
 
 function getLivre(livres, id) {
     ret = null;
-    livres.forEach(function(element) {
-        if (element.id==id) {
+    livres.forEach(function (element) {
+        if (element.id == id) {
             ret = element;
         }
     });
@@ -78,8 +78,8 @@ function getLivre(livres, id) {
 
 function getEmprunt(emprunts, id) {
     ret = null;
-    emprunts.forEach(function(element) {
-        if (element.id==id) {
+    emprunts.forEach(function (element) {
+        if (element.id == id) {
             ret = element;
         }
     });
@@ -90,7 +90,7 @@ function getEmprunt(emprunts, id) {
 app.get(baseUriEmprunt, (req, response) => {
     request(APIEmprunt, { json: true }, (err, res, body) => {
         if (err) {
-            return response.status(500).json({success: false, data: err});
+            return response.status(500).json({ success: false, data: err });
         }
         return response.json(body);
     });
@@ -100,71 +100,71 @@ app.get(baseUriEmprunt, (req, response) => {
 app.post(baseUriEmprunt, (req, response) => {
     const data = { id: req.body.id, nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
     if (!data.id || !data.nom || !data.prenom || !data.livre) {
-        return response.status(500).json({success: false, data: 'missing parameter'});
+        return response.status(500).json({ success: false, data: 'missing parameter' });
     }
 
-    request({ url: APILivre, method: 'GET', json: {}}, (err, res, body) => {
+    request({ url: APILivre, method: 'GET', json: {} }, (err, res, body) => {
         if (err) {
-            return response.status(500).json({success: false, data: err});
+            return response.status(500).json({ success: false, data: err });
         }
-        
+
         var livre = getLivre(body, data.id);
-        if (livre && livre.quantite>0) {
-            request({ url: APIEmprunt, method: 'POST', json: data}, (err, res, body) => {
+        if (livre && livre.quantite > 0) {
+            request({ url: APIEmprunt, method: 'POST', json: data }, (err, res, body) => {
                 if (err) {
-                    return response.status(500).json({success: false, data: err});
+                    return response.status(500).json({ success: false, data: err });
                 }
             });
-            livre.quantite=livre.quantite-1
-            request({ url: APILivre, method: 'PUT', json: livre}, (err, res, body) => {
+            livre.quantite = livre.quantite - 1
+            request({ url: APILivre, method: 'PUT', json: livre }, (err, res, body) => {
                 if (err) {
-                    return response.status(500).json({success: false, data: err});
+                    return response.status(500).json({ success: false, data: err });
                 }
                 return response.json("done");
             });
         }
-        else{
-            return response.status(500).json({success: false, data: 'livre inexistant ou pas de ce livre en stock'});
+        else {
+            return response.status(500).json({ success: false, data: 'livre inexistant ou pas de ce livre en stock' });
         }
-        
+
     });
 });
 
 //delete emprunt
 app.delete(baseUriEmprunt, (req, response) => {
     const data = { id: req.body.id };
-    if (!data.id ) {
-        return response.status(500).json({success: false, data: 'missing parameter'});
+    if (!data.id) {
+        return response.status(500).json({ success: false, data: 'missing parameter' });
     }
 
-    request({ url: APIEmprunt, method: 'GET', json: {}}, (err, res, body) => {
+    request({ url: APIEmprunt, method: 'GET', json: {} }, (err, res, body) => {
         if (err) {
-            return response.status(500).json({success: false, data: err});
+            return response.status(500).json({ success: false, data: err });
         }
-        
+
         var emprunt = getEmprunt(body, data.id);
         if (emprunt) {
-            request({ url: APILivre, method: 'GET', json: data}, (err, res, body) => {
+            request({ url: APILivre, method: 'GET', json: data }, (err, res, body) => {
                 if (err) {
-                    return response.status(500).json({success: false, data: err});
+                    return response.status(500).json({ success: false, data: err });
                 }
                 var livre = getLivre(body, emprunt.livre_id);
-                livre.quantite=livre.quantite+1;
-                request({url:APILivre, method: 'PUT', json:livre}, (err, res, body) => {
-                    if(err){
-                        return response.status(500).json({success: false, data: err});
+                livre.quantite = livre.quantite + 1;
+                request({ url: APILivre, method: 'PUT', json: livre }, (err, res, body) => {
+                    if (err) {
+                        return response.status(500).json({ success: false, data: err });
                     }
-                    request({url:APIEmprunt, method: 'DELETE', json:{"id":emprunt.id}}, (err, res, body) => {
-                        if(err){
-                            return response.status(500).json({success: false, data: err});
+                    request({ url: APIEmprunt, method: 'DELETE', json: { "id": emprunt.id } }, (err, res, body) => {
+                        if (err) {
+                            return response.status(500).json({ success: false, data: err });
                         }
                         return response.json("done");
                     });
                 });
             });
         }
-        else{
-            return response.status(500).json({success: false, data: 'emprunt inexistant'});
+        else {
+            return response.status(500).json({ success: false, data: 'emprunt inexistant' });
         }
     });
 });
