@@ -1,4 +1,4 @@
-DROP TABLE public."Livre";
+DROP TABLE IF EXISTS public."Livre";
 
 CREATE TABLE public."Livre"
 (

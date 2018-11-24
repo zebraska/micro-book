@@ -1,5 +1,5 @@
 {
-  "name": "open-book1",
+  "name": "micro-book1",
   "version": "1.0.0",
   "description": "micro service 1",
   "main": "index.js",
@@ -10,6 +10,9 @@
   "author": "Jules LE BRIS",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4"
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "path": "^0.12.7",
+    "pg": "^6.4.2"
   }
 }
