@@ -78,8 +78,7 @@ app.put(baseUri, (req, res) => {
     const results = [];
     // Grab data from http request
     const data = { id: req.body.id, titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
-    //console.log(data)
-    if (!data.id || !data.titre || !data.auteur || !data.resume || !data.quantite) {
+    if (data.id==undefined || !data.titre || !data.auteur || !data.resume || data.quantite==undefined) {
         return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool

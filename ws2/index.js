@@ -16,13 +16,10 @@ app.post(baseUri, (req, res) => {
     console.log("emprunt post");
     const results = [];
     // Grab data from http request
-    console.log(req.body)
     const data = { id: req.body.id, nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
     if (!data.id || !data.nom || !data.prenom || !data.livre) {
         return res.status(500).json({ success: false, data: 'missing parameter' });
     }
-    console.log(data)
-    console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\")
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
