@@ -12,11 +12,12 @@ app.use(bodyParser.urlencoded());
 
 /* insert */
 app.post(baseUri, (req, res) => {
+    console.log("livre post");
     const results = [];
     // Grab data from http request
     const data = { id: req.body.id, titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
     if (!data.id || !data.titre || !data.auteur || !data.resume || !data.quantite) {
-        return response.status(500).json({ success: false, data: 'missing parameter' });
+        return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, (err, client, done) => {
@@ -48,13 +49,13 @@ app.post(baseUri, (req, res) => {
 
 /* read */
 app.get(baseUri, (req, res) => {
+    console.log("livre get");
     const results = [];
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
         if (err) {
             done();
-            console.log(err);
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Select Data
@@ -73,28 +74,24 @@ app.get(baseUri, (req, res) => {
 
 /* UPDATE */
 app.put(baseUri, (req, res) => {
+    console.log("livre put");
     const results = [];
     // Grab data from http request
     const data = { id: req.body.id, titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
+    //console.log(data)
     if (!data.id || !data.titre || !data.auteur || !data.resume || !data.quantite) {
-        return response.status(500).json({ success: false, data: 'missing parameter' });
+        return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
         if (err) {
             done();
-            console.log(err);
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Update Data
         client.query('UPDATE public."Livre" SET titre=($1), auteur=($2), resume=($3), quantite=($4) WHERE id=($5)',
-            [data.titre, data.auteur, data.resume, data.quantite, data.id], (err) => {
-                if (err) {
-                    return res.status(500).json({ success: false, data: err });
-                }
-            }
-        );
+            [data.titre, data.auteur, data.resume, data.quantite, data.id]);
         // SQL Query > Select Data
         const query = client.query('SELECT * FROM public."Livre"');
         // Stream results back one row at a time
@@ -111,18 +108,18 @@ app.put(baseUri, (req, res) => {
 
 /* DELETE */
 app.delete(baseUri, (req, res) => {
+    console.log("livre delete");
     const results = [];
     // Grab data from the URL parameters
     const id = req.body.id;
     if (!id) {
-        return response.status(500).json({ success: false, data: 'missing parameter' });
+        return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
         if (err) {
             done();
-            console.log(err);
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Delete Data

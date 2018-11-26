@@ -13,12 +13,16 @@ app.use(bodyParser.urlencoded());
 
 /* insert */
 app.post(baseUri, (req, res) => {
+    console.log("emprunt post");
     const results = [];
     // Grab data from http request
+    console.log(req.body)
     const data = { id: req.body.id, nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
     if (!data.id || !data.nom || !data.prenom || !data.livre) {
-        return response.status(500).json({ success: false, data: 'missing parameter' });
+        return res.status(500).json({ success: false, data: 'missing parameter' });
     }
+    console.log(data)
+    console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\")
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
@@ -49,6 +53,7 @@ app.post(baseUri, (req, res) => {
 
 /* read */
 app.get(baseUri, (req, res) => {
+    console.log("emprunt get");
     const results = [];
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, (err, client, done) => {
@@ -73,6 +78,7 @@ app.get(baseUri, (req, res) => {
 
 /* UPDATE */
 app.put(baseUri, (req, res) => {
+    console.log("emprunt put");
     const results = [];
     // Grab data from http request
     const data = { id: req.body.id, nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
@@ -110,11 +116,12 @@ app.put(baseUri, (req, res) => {
 
 /* DELETE */
 app.delete(baseUri, (req, res) => {
+    console.log("emprunt delete");
     const results = [];
     // Grab data from the URL parameters
     const id = req.body.id;
     if (!id) {
-        return response.status(500).json({ success: false, data: 'missing parameter' });
+        return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, (err, client, done) => {

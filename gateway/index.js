@@ -9,6 +9,9 @@ const baseUriEmprunt = '/api/v1/micro-book/emprunt';
 const APILivre = 'http://localhost:3001/api/v1/livre';
 const APIEmprunt = 'http://localhost:3000/api/v1/emprunt';
 
+const fetch = require('node-fetch');
+global.Headers = fetch.Headers;
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
@@ -102,31 +105,55 @@ app.post(baseUriEmprunt, (req, response) => {
     if (!data.id || !data.nom || !data.prenom || !data.livre) {
         return response.status(500).json({ success: false, data: 'missing parameter' });
     }
+    var lhg = new Headers();
+    var lhp = new Headers();
+    var ehp = new Headers();
+    ehp.append("Content-Type", "application/json");
+    lhp.append("Content-Type", "application/json");
 
-    request({ url: APILivre, method: 'GET', json: {} }, (err, res, body) => {
-        if (err) {
-            return response.status(500).json({ success: false, data: err });
-        }
+    var lget = {
+        method: 'GET',
+        headers: lhg,
+        mode: 'cors',
+        cache: 'default'
+    };
 
-        var livre = getLivre(body, data.id);
-        if (livre && livre.quantite > 0) {
-            request({ url: APIEmprunt, method: 'POST', json: data }, (err, res, body) => {
-                if (err) {
-                    return response.status(500).json({ success: false, data: err });
-                }
-            });
-            livre.quantite = livre.quantite - 1
-            request({ url: APILivre, method: 'PUT', json: livre }, (err, res, body) => {
-                if (err) {
-                    return response.status(500).json({ success: false, data: err });
-                }
-                return response.json("done");
-            });
-        }
-        else {
-            return response.status(500).json({ success: false, data: 'livre inexistant ou pas de ce livre en stock' });
-        }
+    var lput = {
+        method: 'PUT',
+        headers: lhp,
+        mode: 'cors',
+        cache: 'default',
+    };
 
+    var epost = {
+        method: 'POST',
+        headers: ehp,
+        mode: 'cors',
+        cache: 'default',
+    };
+
+    return fetch(APILivre, lget).then(function (response) {
+        return response.json();
+    }).then(function (res) {
+        var livre = getLivre(res, data.livre);
+        if (!livre) {
+            throw("livre pas dans la bd");
+        }
+        if (livre.quantite <= 0) {
+            throw("livre pas dispo");
+        }
+        livre.quantite = livre.quantite - 1;
+        return livre;
+    }).then(function (livre) {
+        lput.body=JSON.stringify(livre);
+        return fetch(APILivre, lput);
+    }).then(function() {
+        epost.body=JSON.stringify(data);
+        return fetch(APIEmprunt, epost);
+    }).then(function() {
+        return response.status(200).json({ success: true, data: 'tout va bien' });
+    }).catch(function(error) {
+        return response.status(500).json({ success: false, data: error });
     });
 });
 
