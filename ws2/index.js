@@ -17,11 +17,11 @@ app.post(baseUri, (req, res) => {
     const results = [];
     // Grab data from http request
     const data = { id: req.body.id, nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
-    if (!data.id || !data.nom || !data.prenom || !data.livre) {
+    if (data.id == undefined || !data.nom || !data.prenom || data.livre == undefined) {
         return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
-    pg.connect(connectionString, (err, client, done) => {
+    return pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
         if (err) {
             done();
@@ -42,7 +42,7 @@ app.post(baseUri, (req, res) => {
                 // After all data is returned, close connection and return results
                 query.on('end', () => {
                     done();
-                    return res.json(results);
+                    return res.json({ success: true, data: results });
                 });
             });
     });
@@ -53,7 +53,7 @@ app.get(baseUri, (req, res) => {
     console.log("emprunt get");
     const results = [];
     // Get a Postgres client from the connection pool
-    pg.connect(connectionString, (err, client, done) => {
+    return pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
         if (err) {
             done();
@@ -68,7 +68,7 @@ app.get(baseUri, (req, res) => {
         // After all data is returned, close connection and return results
         query.on('end', () => {
             done();
-            return res.json(results);
+            return res.json({ success: true, data: results });
         });
     });
 });
@@ -79,18 +79,18 @@ app.put(baseUri, (req, res) => {
     const results = [];
     // Grab data from http request
     const data = { id: req.body.id, nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
-    if (!data.id || !data.nom || !data.prenom || !data.livre) {
+    if (data.id == undefined || !data.nom || !data.prenom || data.livre == undefined) {
         return response.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
-    pg.connect(connectionString, (err, client, done) => {
+    return pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
         if (err) {
             done();
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Update Data
-        client.query('UPDATE public."Emprunt" SET nom=($1), prenom=($2), livre_id=($3) WHERE id=($4)',
+        return client.query('UPDATE public."Emprunt" SET nom=($1), prenom=($2), livre_id=($3) WHERE id=($4)',
             [data.nom, data.prenom, data.livre, data.id], (err) => {
                 if (err) {
                     return res.status(500).json({ success: false, data: err });
@@ -104,10 +104,9 @@ app.put(baseUri, (req, res) => {
                 // After all data is returned, close connection and return results
                 query.on('end', function () {
                     done();
-                    return res.json(results);
+                    return res.json({ success: true, data: results });
                 });
             });
-
     });
 });
 
@@ -117,7 +116,7 @@ app.delete(baseUri, (req, res) => {
     const results = [];
     // Grab data from the URL parameters
     const id = req.body.id;
-    if (!id) {
+    if (id == undefined) {
         return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
@@ -128,21 +127,21 @@ app.delete(baseUri, (req, res) => {
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Delete Data
-        client.query('DELETE FROM public."Emprunt" WHERE id=($1)', [id], (err) => {
+        return client.query('DELETE FROM public."Emprunt" WHERE id=($1)', [id], (err) => {
             if (err) {
                 return res.status(500).json({ success: false, data: err });
             }
-        });
-        // SQL Query > Select Data
-        var query = client.query('SELECT * FROM public."Emprunt"');
-        // Stream results back one row at a time
-        query.on('row', (row) => {
-            results.push(row);
-        });
-        // After all data is returned, close connection and return results
-        query.on('end', () => {
-            done();
-            return res.json(results);
+            // SQL Query > Select Data
+            var query = client.query('SELECT * FROM public."Emprunt"');
+            // Stream results back one row at a time
+            query.on('row', (row) => {
+                results.push(row);
+            });
+            // After all data is returned, close connection and return results
+            query.on('end', () => {
+                done();
+                return res.json({ success: true, data: results });
+            });
         });
     });
 });
