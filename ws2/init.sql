@@ -1,4 +1,4 @@
-DROP TABLE public."Emprunt" IF NOT EXISTS;
+/* DROP TABLE public."Emprunt" IF NOT EXISTS; */
 CREATE TABLE public."Emprunt"
 (
     id integer NOT NULL,
@@ -6,11 +6,4 @@ CREATE TABLE public."Emprunt"
     "prenom" character varying COLLATE pg_catalog."default" NOT NULL,
 	"livre_id" integer,
     CONSTRAINT "Emprunt_pkey" PRIMARY KEY (id)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-ALTER TABLE public."Emprunt"
-    OWNER to ws_user;
+);
