@@ -1,0 +1,31 @@
+version: "3"
+services:
+        app:
+                build:
+                        context: .
+                        dockerfile: Dockerfile-app
+                depends_on:
+                        - db
+                ports:
+                        - "3001:3001"
+                networks: 
+                        ETH2:
+                                ipv4_address: 10.6.0.2
+        db:
+                build: 
+                        context: .
+                        dockerfile: Dockerfile-db
+                environment:
+                        POSTGRES_USER: livre
+                        POSTGRES_PASSWORD: livre
+                        POSTGRES_DB: livre
+                networks: 
+                        ETH2:
+                                ipv4_address: 10.6.0.3
+networks:
+        ETH2:
+                driver: bridge
+                ipam:
+                        config:
+                        - 
+                                subnet: 10.6.0.0/16

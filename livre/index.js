@@ -4,20 +4,19 @@ const pg = require('pg');
 const path = require('path');
 const bodyParser = require('body-parser')
 const app = express()
-//const connectionString = 'postgresql://ws2:passwd2@localhost:5432/service';
-const connectionString = 'postgresql://ripoul:Motherlode0@localhost:5432/service';
-const baseUri = '/api/v1/emprunt'
+const connectionString = 'postgresql://livre:livre@10.6.0.3:5432/livre';
+const baseUri = '/api/v1/livre'
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
 /* insert */
 app.post(baseUri, (req, res) => {
-    console.log("emprunt post");
+    console.log("livre post");
     const results = [];
     // Grab data from http request
-    const data = { id: req.body.id, nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
-    if (data.id == undefined || !data.nom || !data.prenom || data.livre == undefined) {
+    const data = { id: req.body.id, titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
+    if (data.id == undefined || !data.titre || !data.auteur || !data.resume || data.quantite == undefined) {
         return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
@@ -28,13 +27,13 @@ app.post(baseUri, (req, res) => {
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Insert Data
-        client.query('INSERT INTO public."Emprunt"(id, nom, prenom, livre_id) VALUES ($1, $2, $3, $4);',
-            [data.id, data.nom, data.prenom, data.livre], (err) => {
+        return client.query('INSERT INTO public."Livre"(id, titre, auteur, resume, quantite) VALUES ($1, $2, $3, $4, $5);',
+            [data.id, data.titre, data.auteur, data.resume, data.quantite], (err) => {
                 if (err) {
                     return res.status(500).json({ success: false, data: err });
                 }
                 // SQL Query > Select Data
-                const query = client.query('SELECT * FROM public."Emprunt"');
+                const query = client.query('SELECT * FROM public."Livre"');
                 // Stream results back one row at a time
                 query.on('row', (row) => {
                     results.push(row);
@@ -50,7 +49,7 @@ app.post(baseUri, (req, res) => {
 
 /* read */
 app.get(baseUri, (req, res) => {
-    console.log("emprunt get");
+    console.log("livre get");
     const results = [];
     // Get a Postgres client from the connection pool
     return pg.connect(connectionString, (err, client, done) => {
@@ -60,8 +59,13 @@ app.get(baseUri, (req, res) => {
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Select Data
-        const query = client.query('SELECT * FROM public."Emprunt";');
+        const query = client.query('SELECT * FROM public."Livre";');
         // Stream results back one row at a time
+
+        query.on('error', (err) => {
+            return res.status(500).json({ success: false, data: err });
+        })
+
         query.on('row', (row) => {
             results.push(row);
         });
@@ -75,12 +79,12 @@ app.get(baseUri, (req, res) => {
 
 /* UPDATE */
 app.put(baseUri, (req, res) => {
-    console.log("emprunt put");
+    console.log("livre put");
     const results = [];
     // Grab data from http request
-    const data = { id: req.body.id, nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
-    if (data.id == undefined || !data.nom || !data.prenom || data.livre == undefined) {
-        return response.status(500).json({ success: false, data: 'missing parameter' });
+    const data = { id: req.body.id, titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
+    if (data.id == undefined || !data.titre || !data.auteur || !data.resume || data.quantite == undefined) {
+        return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
     return pg.connect(connectionString, (err, client, done) => {
@@ -90,13 +94,14 @@ app.put(baseUri, (req, res) => {
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Update Data
-        return client.query('UPDATE public."Emprunt" SET nom=($1), prenom=($2), livre_id=($3) WHERE id=($4)',
-            [data.nom, data.prenom, data.livre, data.id], (err) => {
+        return client.query('UPDATE public."Livre" SET titre=($1), auteur=($2), resume=($3), quantite=($4) WHERE id=($5)',
+            [data.titre, data.auteur, data.resume, data.quantite, data.id], (err) => {
                 if (err) {
                     return res.status(500).json({ success: false, data: err });
                 }
+
                 // SQL Query > Select Data
-                const query = client.query("SELECT * FROM public.\"Emprunt\"");
+                const query = client.query('SELECT * FROM public."Livre"');
                 // Stream results back one row at a time
                 query.on('row', (row) => {
                     results.push(row);
@@ -112,7 +117,7 @@ app.put(baseUri, (req, res) => {
 
 /* DELETE */
 app.delete(baseUri, (req, res) => {
-    console.log("emprunt delete");
+    console.log("livre delete");
     const results = [];
     // Grab data from the URL parameters
     const id = req.body.id;
@@ -127,12 +132,13 @@ app.delete(baseUri, (req, res) => {
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Delete Data
-        return client.query('DELETE FROM public."Emprunt" WHERE id=($1)', [id], (err) => {
+        return client.query('DELETE FROM public."Livre" WHERE id=($1)', [id], (err) => {
             if (err) {
                 return res.status(500).json({ success: false, data: err });
             }
+
             // SQL Query > Select Data
-            var query = client.query('SELECT * FROM public."Emprunt"');
+            var query = client.query('SELECT * FROM public."Livre"');
             // Stream results back one row at a time
             query.on('row', (row) => {
                 results.push(row);
@@ -147,6 +153,6 @@ app.delete(baseUri, (req, res) => {
 });
 
 
-app.listen(3000, function () {
-    console.log('Example app listening on port 3000!')
+app.listen(3001, function () {
+    console.log('Example app listening on port 3001!')
 })

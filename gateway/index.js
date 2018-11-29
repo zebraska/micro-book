@@ -8,6 +8,8 @@ const baseUriLivre = '/api/v1/micro-book/livre';
 const baseUriEmprunt = '/api/v1/micro-book/emprunt';
 const APILivre = 'http://localhost:3001/api/v1/livre';
 const APIEmprunt = 'http://localhost:3000/api/v1/emprunt';
+//const APILivre = 'http://192.168.0.1:3001/api/v1/livre';
+//const APIEmprunt = 'http://192.168.0.1:3000/api/v1/emprunt';
 
 const fetch = require('node-fetch');
 global.Headers = fetch.Headers;
