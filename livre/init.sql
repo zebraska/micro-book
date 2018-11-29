@@ -8,11 +8,4 @@ CREATE TABLE public."Livre"
     "resume" character varying COLLATE pg_catalog."default",
 	"quantite" integer,
     CONSTRAINT "Livre_pkey" PRIMARY KEY (id)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-ALTER TABLE public."Livre"
-    OWNER to ripoul;
+);

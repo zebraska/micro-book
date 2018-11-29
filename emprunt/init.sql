@@ -1,4 +1,4 @@
-/* DROP TABLE public."Emprunt" IF NOT EXISTS; */
+DROP TABLE IF EXISTS public."Emprunt";
 CREATE TABLE public."Emprunt"
 (
     id integer NOT NULL,

@@ -1,0 +1,5 @@
+FROM postgres:9.6.8-alpine
+COPY init.sql /docker-entrypoint-initdb.d
+ENV POSTGRES_USER livre
+ENV POSTGRES_PASSWORD livre
+ENV POSTGRES_DB livre

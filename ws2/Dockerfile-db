@@ -1,5 +1,0 @@
-FROM postgres:9.6.8-alpine
-ENV POSTGRES_USER ws2
-ENV POSTGRES_PASSWORD passwd2
-ENV POSTGRES_DB service
-COPY init.sql /docker-entrypoint-initdb.d/

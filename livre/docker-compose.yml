@@ -7,25 +7,25 @@ services:
                 depends_on:
                         - db
                 ports:
-                        - "3000:3000"
+                        - "3001:3001"
                 networks: 
-                        ETH:
-                                ipv4_address: 10.5.0.2
+                        ETH2:
+                                ipv4_address: 10.6.0.2
         db:
                 build: 
                         context: .
                         dockerfile: Dockerfile-db
                 environment:
-                        POSTGRES_USER: ws2
-                        POSTGRES_PASSWORD: passwd2
-                        POSTGRES_DB: service
+                        POSTGRES_USER: livre
+                        POSTGRES_PASSWORD: livre
+                        POSTGRES_DB: livre
                 networks: 
-                        ETH:
-                                ipv4_address: 10.5.0.3
+                        ETH2:
+                                ipv4_address: 10.6.0.3
 networks:
-        ETH:
+        ETH2:
                 driver: bridge
                 ipam:
                         config:
                         - 
-                                subnet: 10.5.0.0/16
+                                subnet: 10.6.0.0/16
