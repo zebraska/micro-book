@@ -15,8 +15,8 @@ app.post(baseUri, (req, res) => {
     console.log("emprunt post");
     const results = [];
     // Grab data from http request
-    const data = { id: req.body.id, nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
-    if (data.id == undefined || !data.nom || !data.prenom || data.livre == undefined) {
+    const data = { nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
+    if ( !data.nom || !data.prenom || data.livre == undefined) {
         return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
@@ -27,8 +27,8 @@ app.post(baseUri, (req, res) => {
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Insert Data
-        return client.query('INSERT INTO public."Emprunt"(id, nom, prenom, livre_id) VALUES ($1, $2, $3, $4);',
-            [data.id, data.nom, data.prenom, data.livre], (err) => {
+        return client.query('INSERT INTO public."Emprunt"(nom, prenom, livre_id) VALUES ($1, $2, $3);',
+            [data.nom, data.prenom, data.livre], (err) => {
                 if (err) {
                     return res.status(500).json({ success: false, data: err });
                 }

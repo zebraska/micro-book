@@ -34,8 +34,8 @@ app.get(baseUriLivre, (req, response) => {
 //add livre
 app.post(baseUriLivre, (req, response) => {
     console.log("post livre");
-    const data = { id: req.body.id, titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
-    if (data.id == undefined || !data.auteur || data.quantite == undefined || !data.resume || !data.titre) {
+    const data = { titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
+    if (!data.auteur || data.quantite == undefined || !data.resume || !data.titre) {
         return response.status(500).json({ success: false, data: 'missing parameter' });
     }
     return request({ url: APILivre, method: 'POST', json: data }, (err, res, body) => {
@@ -141,8 +141,8 @@ app.get(baseUriEmprunt, (req, response) => {
 //add emprunt
 app.post(baseUriEmprunt, (req, response) => {
     console.log("post emprunt");
-    const data = { id: req.body.id, nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
-    if (data.id == undefined || !data.nom || !data.prenom || data.livre == undefined) {
+    const data = {nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
+    if (!data.nom || !data.prenom || data.livre == undefined) {
         return response.status(500).json({ success: false, data: 'missing parameter' });
     }
     return request({ url: APILivre, method: 'GET', json: {} }, (err, res, body) => {

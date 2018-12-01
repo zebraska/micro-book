@@ -15,8 +15,8 @@ app.post(baseUri, (req, res) => {
     console.log("livre post");
     const results = [];
     // Grab data from http request
-    const data = { id: req.body.id, titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
-    if (data.id == undefined || !data.titre || !data.auteur || !data.resume || data.quantite == undefined) {
+    const data = {titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
+    if (!data.titre || !data.auteur || !data.resume || data.quantite == undefined) {
         return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
@@ -27,8 +27,8 @@ app.post(baseUri, (req, res) => {
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Insert Data
-        return client.query('INSERT INTO public."Livre"(id, titre, auteur, resume, quantite) VALUES ($1, $2, $3, $4, $5);',
-            [data.id, data.titre, data.auteur, data.resume, data.quantite], (err) => {
+        return client.query('INSERT INTO public."Livre"(titre, auteur, resume, quantite) VALUES ($1, $2, $3, $4);',
+            [data.titre, data.auteur, data.resume, data.quantite], (err) => {
                 if (err) {
                     return res.status(500).json({ success: false, data: err });
                 }
