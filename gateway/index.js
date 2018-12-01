@@ -81,11 +81,15 @@ app.delete(baseUriLivre, (req, response) => {
         if (!body.success) {
             return response.status(500).json({ success: false, data: body.data });
         }
+        error=false;
         body.data.forEach(function (emprunt) {
             if (emprunt.livre_id == data.id) {
-                return response.status(500).json({ success: false, data: "ne peut pas suprimer un livre possedant encors des emprunts" });
+                error=true;
             }
         });
+        if (error) {
+            return response.status(500).json({ success: false, data: "ne peut pas suprimer un livre possedant encors des emprunts" });
+        }
         return request({ url: APILivre, method: 'DELETE', json: data }, (err, res, body) => {
             if (err) {
                 return response.status(500).json({ success: false, data: err });
@@ -224,12 +228,6 @@ app.delete(baseUriEmprunt, (req, response) => {
         });
     });
 });
-
-
-//update emprunt
-/*app.put(baseUriEmprunt, (req, response) => {
-
-});*/
 
 
 app.listen(3002, function () {

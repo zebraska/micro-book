@@ -27,7 +27,7 @@ app.post(baseUri, (req, res) => {
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Insert Data
-        client.query('INSERT INTO public."Emprunt"(id, nom, prenom, livre_id) VALUES ($1, $2, $3, $4);',
+        return client.query('INSERT INTO public."Emprunt"(id, nom, prenom, livre_id) VALUES ($1, $2, $3, $4);',
             [data.id, data.nom, data.prenom, data.livre], (err) => {
                 if (err) {
                     return res.status(500).json({ success: false, data: err });
@@ -39,7 +39,7 @@ app.post(baseUri, (req, res) => {
                     results.push(row);
                 });
                 // After all data is returned, close connection and return results
-                query.on('end', () => {
+                return query.on('end', () => {
                     done();
                     return res.json({ success: true, data: results });
                 });
@@ -65,7 +65,7 @@ app.get(baseUri, (req, res) => {
             results.push(row);
         });
         // After all data is returned, close connection and return results
-        query.on('end', () => {
+        return query.on('end', () => {
             done();
             return res.json({ success: true, data: results });
         });
@@ -119,7 +119,7 @@ app.delete(baseUri, (req, res) => {
         return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
-    pg.connect(connectionString, (err, client, done) => {
+    return pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
         if (err) {
             done();
@@ -137,7 +137,7 @@ app.delete(baseUri, (req, res) => {
                 results.push(row);
             });
             // After all data is returned, close connection and return results
-            query.on('end', () => {
+            return query.on('end', () => {
                 done();
                 return res.json({ success: true, data: results });
             });

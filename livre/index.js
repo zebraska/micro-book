@@ -39,7 +39,7 @@ app.post(baseUri, (req, res) => {
                     results.push(row);
                 });
                 // After all data is returned, close connection and return results
-                query.on('end', () => {
+                return query.on('end', () => {
                     done();
                     return res.json({ success: true, data: results });
                 });
@@ -70,7 +70,7 @@ app.get(baseUri, (req, res) => {
             results.push(row);
         });
         // After all data is returned, close connection and return results
-        query.on('end', () => {
+        return query.on('end', () => {
             done();
             return res.json({ success: true, data: results });
         });
@@ -107,7 +107,7 @@ app.put(baseUri, (req, res) => {
                     results.push(row);
                 });
                 // After all data is returned, close connection and return results
-                query.on('end', function () {
+                return query.on('end', function () {
                     done();
                     return res.json({ success: true, data: results });
                 });
@@ -144,7 +144,7 @@ app.delete(baseUri, (req, res) => {
                 results.push(row);
             });
             // After all data is returned, close connection and return results
-            query.on('end', () => {
+            return query.on('end', () => {
                 done();
                 return res.json({ success: true, data: results });
             });
