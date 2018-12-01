@@ -15,7 +15,7 @@ app.post(baseUri, (req, res) => {
     console.log("livre post");
     const results = [];
     // Grab data from http request
-    const data = {titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
+    const data = { titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
     if (!data.titre || !data.auteur || !data.resume || data.quantite == undefined) {
         return res.status(500).json({ success: false, data: 'missing parameter' });
     }

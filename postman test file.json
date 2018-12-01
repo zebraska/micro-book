@@ -213,6 +213,39 @@
 					"response": []
 				},
 				{
+					"name": "get emprunt by livre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3002/api/v1/micro-book/emprunt/byLivre?livre_id=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"api",
+								"v1",
+								"micro-book",
+								"emprunt",
+								"byLivre"
+							],
+							"query": [
+								{
+									"key": "livre_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "add emprunt",
 					"request": {
 						"method": "POST",
@@ -504,6 +537,38 @@
 								"api",
 								"v1",
 								"emprunt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get emprunt by livre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/emprunt/byLivre?livre_id=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"emprunt",
+								"byLivre"
+							],
+							"query": [
+								{
+									"key": "livre_id",
+									"value": "1"
+								}
 							]
 						}
 					},

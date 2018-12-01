@@ -16,7 +16,7 @@ app.post(baseUri, (req, res) => {
     const results = [];
     // Grab data from http request
     const data = { nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
-    if ( !data.nom || !data.prenom || data.livre == undefined) {
+    if (!data.nom || !data.prenom || data.livre == undefined) {
         return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
@@ -145,6 +145,35 @@ app.delete(baseUri, (req, res) => {
     });
 });
 
+/* get emprunt by livre */
+app.get(baseUri + '/byLivre', (req, res) => {
+    console.log("get emprunt by livre");
+    const results = [];
+    // Grab data from the URL parameters
+    const livre_id = req.query.livre_id;
+    if (livre_id == undefined) {
+        return res.status(500).json({ success: false, data: 'missing parameter' });
+    }
+    // Get a Postgres client from the connection pool
+    return pg.connect(connectionString, (err, client, done) => {
+        // Handle connection errors
+        if (err) {
+            done();
+            return res.status(500).json({ success: false, data: err });
+        }
+        // SQL Query > Delete Data
+        var query = client.query('SELECT * FROM public."Emprunt" WHERE livre_id=($1)', [livre_id]);
+
+        query.on('row', (row) => {
+            results.push(row);
+        });
+        // After all data is returned, close connection and return results
+        return query.on('end', () => {
+            done();
+            return res.json({ success: true, data: results });
+        });
+    });
+});
 
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!')
