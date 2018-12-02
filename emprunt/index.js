@@ -15,8 +15,8 @@ app.post(baseUri, (req, res) => {
     console.log("emprunt post");
     const results = [];
     // Grab data from http request
-    const data = { id: req.body.id, nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
-    if (data.id == undefined || !data.nom || !data.prenom || data.livre == undefined) {
+    const data = { nom: req.body.nom, prenom: req.body.prenom, livre: req.body.livre };
+    if (!data.nom || !data.prenom || data.livre == undefined) {
         return res.status(500).json({ success: false, data: 'missing parameter' });
     }
     // Get a Postgres client from the connection pool
@@ -27,8 +27,8 @@ app.post(baseUri, (req, res) => {
             return res.status(500).json({ success: false, data: err });
         }
         // SQL Query > Insert Data
-        return client.query('INSERT INTO public."Emprunt"(id, nom, prenom, livre_id) VALUES ($1, $2, $3, $4);',
-            [data.id, data.nom, data.prenom, data.livre], (err) => {
+        return client.query('INSERT INTO public."Emprunt"(nom, prenom, livre_id) VALUES ($1, $2, $3);',
+            [data.nom, data.prenom, data.livre], (err) => {
                 if (err) {
                     return res.status(500).json({ success: false, data: err });
                 }
@@ -145,6 +145,35 @@ app.delete(baseUri, (req, res) => {
     });
 });
 
+/* get emprunt by livre */
+app.get(baseUri + '/byLivre', (req, res) => {
+    console.log("get emprunt by livre");
+    const results = [];
+    // Grab data from the URL parameters
+    const livre_id = req.query.livre_id;
+    if (livre_id == undefined) {
+        return res.status(500).json({ success: false, data: 'missing parameter' });
+    }
+    // Get a Postgres client from the connection pool
+    return pg.connect(connectionString, (err, client, done) => {
+        // Handle connection errors
+        if (err) {
+            done();
+            return res.status(500).json({ success: false, data: err });
+        }
+        // SQL Query > Delete Data
+        var query = client.query('SELECT * FROM public."Emprunt" WHERE livre_id=($1)', [livre_id]);
+
+        query.on('row', (row) => {
+            results.push(row);
+        });
+        // After all data is returned, close connection and return results
+        return query.on('end', () => {
+            done();
+            return res.json({ success: true, data: results });
+        });
+    });
+});
 
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!')

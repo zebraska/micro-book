@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS public."Livre";
 
 CREATE TABLE public."Livre"
 (
-    id integer NOT NULL,
+    id SERIAL NOT NULL,
     "titre" character varying COLLATE pg_catalog."default" NOT NULL,
     "auteur" character varying COLLATE pg_catalog."default" NOT NULL,
     "resume" character varying COLLATE pg_catalog."default",
