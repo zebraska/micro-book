@@ -18,6 +18,7 @@
         <md-table-cell md-label="AUTEUR" md-sort-by="auteur">{{item.auteur}}</md-table-cell>
         <md-table-cell md-label="RESUME" md-sort-by="resume">{{item.resume}}</md-table-cell>
         <md-table-cell md-label="QUANTITE" md-sort-by="quantite">{{item.quantite}}</md-table-cell>
+        <md-table-cell><img src="@/assets/borrow_book.png" @click.stop="borrow(item)"></md-table-cell>
       </md-table-row>
     </md-table>
     {{selected}}
@@ -43,6 +44,12 @@ export default Vue.extend({
     },
     newBook() {
       this.$router.push({ name: "livre" });
+    },
+    borrow(livre: Livre){
+      this.$router.push({
+        name: "borrowBook",
+        params: { livre, id: livre.id }
+      });
     }
   },
   props: ["livres"]
