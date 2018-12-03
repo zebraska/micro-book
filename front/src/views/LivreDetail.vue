@@ -1,5 +1,9 @@
 <template>
   <div md-card>
+    <md-snackbar :md-position="sb.position" :md-duration="sb.duration" :md-active.sync="sb.showSnackbar" md-persistent>
+      <span>{{sb.error}}</span>
+      <md-button class="md-primary" @click="sb.showSnackbar = false">Retry</md-button>
+    </md-snackbar>
     <md-field>
       <label>Titre</label>
       <md-input v-model="livre.titre"></md-input>
@@ -34,10 +38,19 @@ export default Vue.extend({
       this.livre = {};
       this.new=true;
     }
-    console.log(this.new);
   },
   data() {
-    return {new:false};
+    return {
+      new:false,
+      sb: {
+        showSnackbar: false,
+        position: 'left',
+        duration: 4000,
+        isInfinity: false,
+        error:""
+      }
+      
+    };
   },
   methods: {
     select(livre: Livre) {
@@ -69,7 +82,9 @@ export default Vue.extend({
             throw res.data;
           }
           this.$router.push({ name: "home" });
-        }).catch(function(error){
+        }).catch((error)=>{
+          this.sb.error=error;
+          this.sb.showSnackbar=true;
           console.log(error);
         });
       }	else{
@@ -94,8 +109,9 @@ export default Vue.extend({
             throw res.data;
           }
           this.$router.push({ name: "home" });
-        }).catch(function(error){
-          console.log(error);
+        }).catch((error)=>{
+          this.sb.error=error;
+          this.sb.showSnackbar=true;
         });
       }      
     }

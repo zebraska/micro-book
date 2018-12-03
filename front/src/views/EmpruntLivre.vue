@@ -1,5 +1,9 @@
 <template>
 <div>
+  <md-snackbar :md-position="sb.position" :md-duration="sb.duration" :md-active.sync="sb.showSnackbar" md-persistent>
+    <span>{{sb.error}}</span>
+    <md-button class="md-primary" @click="sb.showSnackbar = false">Retry</md-button>
+  </md-snackbar>
   <h2> {{ livre.titre }} </h2>
   <div md-card>
     <md-field>
@@ -34,8 +38,15 @@ export default Vue.extend({
   },
   data() {
     return {
-        prenom: "",
-        nom: ""
+      prenom: "",
+      nom: "",
+      sb: {
+        showSnackbar: false,
+        position: 'left',
+        duration: 4000,
+        isInfinity: false,
+        error:""
+      }
     };
   },
   methods: {
@@ -64,8 +75,10 @@ export default Vue.extend({
             throw res.data;
             }
             this.$router.push({ name: "home" });
-        }).catch(function(error){
-            console.log(error);
+        }).catch((error)=>{
+          this.sb.error=error;
+          this.sb.showSnackbar=true;
+          console.log(error);
         });
     }
   },

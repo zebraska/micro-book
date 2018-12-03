@@ -1,5 +1,9 @@
 <template>
   <div>
+    <md-snackbar :md-position="sb.position" :md-duration="sb.duration" :md-active.sync="sb.showSnackbar" md-persistent>
+      <span>{{sb.error}}</span>
+      <md-button class="md-primary" @click="sb.showSnackbar = false">Retry</md-button>
+    </md-snackbar>
     <md-table v-model="livres" md-sort="id" md-sort-order="asc" md-card @md-selected="select">
       <md-table-toolbar>
         <h1 class="md-title">Livres</h1>
@@ -36,7 +40,14 @@ import { Livre } from "../model/livre.model";
 export default Vue.extend({
   data() {
     return {
-      selected: null
+      selected: null,
+      sb: {
+        showSnackbar: false,
+        position: 'left',
+        duration: 4000,
+        isInfinity: false,
+        error:""
+      }
     };
   },
   methods: {
@@ -76,7 +87,9 @@ export default Vue.extend({
           throw res.data;
         }
         this.livres=res.data
-      }).catch(function(error){
+      }).catch((error)=>{
+        this.sb.error=error;
+        this.sb.showSnackbar=true;
         console.log(error);
       });
     }

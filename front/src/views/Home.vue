@@ -1,5 +1,9 @@
 <template>
   <div class="home">
+    <md-snackbar :md-position="sb.position" :md-duration="sb.duration" :md-active.sync="sb.showSnackbar" md-persistent>
+      <span>{{sb.error}}</span>
+      <md-button class="md-primary" @click="sb.showSnackbar = false">Retry</md-button>
+    </md-snackbar>
     <h1>Micro Book Front</h1>
     <LivreList v-bind:livres="livres"/>
   </div>
@@ -16,7 +20,16 @@ import axios, { AxiosResponse } from "axios";
     LivreList
   },
   data() {
-    return { livres: [] };
+    return { 
+      livres: [],
+      sb: {
+        showSnackbar: false,
+        position: 'left',
+        duration: 4000,
+        isInfinity: false,
+        error:""
+      }
+    };
   },
   created() {
     const APILivre = "http://localhost:3002/api/v1/micro-book/livre";
@@ -34,7 +47,9 @@ import axios, { AxiosResponse } from "axios";
         throw res.data;
       }
       this.livres = res.data;
-    }).catch(function(error){
+    }).catch((error)=>{
+      this.sb.error=error;
+      this.sb.showSnackbar=true;
       console.log(error);
     });
   }
