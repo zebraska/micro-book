@@ -42,7 +42,9 @@ export default Vue.extend({
       });
     },
     newBook() {
-      this.$router.push({ name: "livre" });
+      this.$router.push({
+        name: "livre",
+      });
     }
   },
   props: ["livres"]
