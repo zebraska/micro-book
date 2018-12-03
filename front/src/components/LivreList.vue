@@ -17,7 +17,10 @@
         <md-table-cell md-label="AUTEUR" md-sort-by="auteur">{{item.auteur}}</md-table-cell>
         <md-table-cell md-label="RESUME" md-sort-by="resume">{{item.resume}}</md-table-cell>
         <md-table-cell md-label="QUANTITE" md-sort-by="quantite">{{item.quantite}}</md-table-cell>
-        <md-table-cell md-label="EMPRUNTER"><img src="@/assets/borrow_book.png" @click.stop="borrow(item)"></md-table-cell>
+        <md-table-cell md-label="EMPRUNTER">
+          <img v-if="item.quantite != 0" class="borrow_icon" src="@/assets/borrow_book.png" @click.stop="borrow(item)">
+          <img v-else class="borrow_icon" src="@/assets/borrow_book.png" style="opacity: .4;">
+        </md-table-cell>
       </md-table-row>
     </md-table>
     {{selected}}
@@ -75,5 +78,10 @@ a {
 
 [md-card] {
   margin: 2% 5%;
+}
+
+.greyedOut {
+  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%);
 }
 </style>
