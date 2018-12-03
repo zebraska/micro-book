@@ -36,6 +36,9 @@ app.post(baseUriLivre, (req, response) => {
     if (!data.auteur || data.quantite == undefined || !data.resume || !data.titre) {
         return response.status(500).json({ success: false, data: 'missing parameter' });
     }
+    if (data.quantite<0) {
+        return res.status(500).json({ success: false, data: 'quantite must be greater or equal than 0' });
+    }
     return request({ url: APILivre, method: 'POST', json: data }, (err, res, body) => {
         if (err) {
             return response.status(500).json({ success: false, data: err });
@@ -53,6 +56,9 @@ app.put(baseUriLivre, (req, response) => {
     const data = { id: req.body.id, titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
     if (data.id == undefined || !data.auteur || data.quantite == undefined || !data.resume || !data.titre) {
         return response.status(500).json({ success: false, data: 'missing parameter' });
+    }
+    if (data.quantite<0) {
+        return res.status(500).json({ success: false, data: 'quantite must be greater or equal than 0' });
     }
     return request({ url: APILivre, method: 'PUT', json: data }, (err, res, body) => {
         if (err) {

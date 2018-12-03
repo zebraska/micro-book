@@ -19,6 +19,9 @@ app.post(baseUri, (req, res) => {
     if (!data.titre || !data.auteur || !data.resume || data.quantite == undefined) {
         return res.status(500).json({ success: false, data: 'missing parameter' });
     }
+    if (data.quantite<0) {
+        return res.status(500).json({ success: false, data: 'quantite must be greater or equal than 0' });
+    }
     // Get a Postgres client from the connection pool
     return pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
@@ -85,6 +88,9 @@ app.put(baseUri, (req, res) => {
     const data = { id: req.body.id, titre: req.body.titre, auteur: req.body.auteur, resume: req.body.resume, quantite: req.body.quantite };
     if (data.id == undefined || !data.titre || !data.auteur || !data.resume || data.quantite == undefined) {
         return res.status(500).json({ success: false, data: 'missing parameter' });
+    }
+    if (data.quantite<0) {
+        return res.status(500).json({ success: false, data: 'quantite must be greater or equal than 0' });
     }
     // Get a Postgres client from the connection pool
     return pg.connect(connectionString, (err, client, done) => {
