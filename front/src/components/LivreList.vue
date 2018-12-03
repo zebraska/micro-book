@@ -21,9 +21,10 @@
         <md-table-cell md-label="AUTEUR" md-sort-by="auteur">{{item.auteur}}</md-table-cell>
         <md-table-cell md-label="RESUME" md-sort-by="resume">{{item.resume}}</md-table-cell>
         <md-table-cell md-label="QUANTITE" md-sort-by="quantite">{{item.quantite}}</md-table-cell>
-        <md-table-cell md-label="EMPRUNTER">
-          <img v-if="item.quantite != 0" class="borrow_icon" src="@/assets/borrow_book.png" @click.stop="borrow(item)">
+        <md-table-cell md-label="GESTION DES EMPRUNTS">
+          <img v-if="item.quantite != 0" class="borrow_icon" src="@/assets/borrow_book.png" @click.stop="borrow(item)" title="Emprunter un livre">
           <img v-else class="borrow_icon" src="@/assets/borrow_book.png" style="opacity: .4;">
+          <span title="Gerer les emprunts"><font-awesome-icon icon="exchange-alt" size="2x" @click.stop="gererEmprunt(item)"/></span>
         </md-table-cell>
         <md-table-cell md-label="DELETE"><font-awesome-icon icon="trash" size="2x" @click.stop="deleteLivre(item)"/></md-table-cell>
       </md-table-row>
@@ -91,6 +92,12 @@ export default Vue.extend({
         this.sb.error=error;
         this.sb.showSnackbar=true;
         console.log(error);
+      });
+    },
+    gererEmprunt(livre: Livre){
+      this.$router.push({
+        name: "gererEmprunt",
+        params: { livre, id: livre.id }
       });
     }
   },
