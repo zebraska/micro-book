@@ -17,7 +17,8 @@
         <md-table-cell md-label="AUTEUR" md-sort-by="auteur">{{item.auteur}}</md-table-cell>
         <md-table-cell md-label="RESUME" md-sort-by="resume">{{item.resume}}</md-table-cell>
         <md-table-cell md-label="QUANTITE" md-sort-by="quantite">{{item.quantite}}</md-table-cell>
-        <md-table-cell><img src="@/assets/borrow_book.png" @click.stop="borrow(item)"></md-table-cell>
+        <md-table-cell md-label="EMPRUNTE"><img src="@/assets/borrow_book.png" @click.stop="borrow(item)"></md-table-cell>
+        <md-table-cell md-label="DELETE"><font-awesome-icon icon="trash" @click.stop="deleteLivre(item)"/></md-table-cell>
       </md-table-row>
     </md-table>
     {{selected}}
@@ -49,6 +50,31 @@ export default Vue.extend({
       this.$router.push({
         name: "borrowBook",
         params: { livre, id: livre.id }
+      });
+    },
+    deleteLivre(livre: Livre){
+      const APILivre = "http://localhost:3002/api/v1/micro-book/livre";
+      var headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      var param = {	
+        method: 'DELETE',	
+        headers: headers,	
+        mode: 'cors',	
+        cache: 'default',
+      };
+      var body={
+        id: livre.id
+      };
+      param.body=JSON.stringify(body);
+      fetch(APILivre, param).then((response)=>{	
+        return response.json();	
+      }).then((res)=>{
+        if(!res.success){
+          throw res.data;
+        }
+        this.livres=res.data
+      }).catch(function(error){
+        console.log(error);
       });
     }
   },
