@@ -20,7 +20,7 @@
       <md-input v-model="livre.quantite" type="number"></md-input>
     </md-field>
 
-    <md-button class="md-raised md-primary">Valider</md-button>
+    <md-button @click="updateBook" class="md-raised md-primary">Valider</md-button>
   </div>
 </template>
 
@@ -41,7 +41,37 @@ export default Vue.extend({
     select(livre: Livre) {
       this.selected = livre;
     },
-    newBook() {}
+    updateBook() {
+      const APILivre = "http://localhost:3002/api/v1/micro-book/livre";
+      var headers = new Headers();	       
+      headers.append("Content-Type", "application/json");
+      var param = {	
+        method: 'PUT',	
+        headers: headers,	
+        mode: 'cors',	
+        cache: 'default',
+      };
+      var body={
+        id: this.livre.id,
+        titre:this.livre.titre,
+        auteur:this.livre.auteur,
+        resume:this.livre.resume,
+        quantite:this.livre.quantite
+      };
+      param.body=JSON.stringify(body);
+      fetch(APILivre, param).then((response)=>{	
+        console.log(response)
+        return response.json();	
+      }).then((res)=>{
+        if(!res.success){
+          console.log("error put livre");
+          throw res.data;
+        }
+        this.$router.push({ name: "home" });
+      }).catch(function(error){
+        console.log(error);
+      });
+    }
   },
   props: ["livre"]
 });

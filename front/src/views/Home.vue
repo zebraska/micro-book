@@ -27,24 +27,26 @@ import axios, { AxiosResponse } from "axios";
     //   .catch(error => {
     //     // Handle error here
     //   });
-    setTimeout(() => {
-      this.livres = [
-        {
-          id: 1,
-          titre: "Titanic",
-          auteur: "pierre bob",
-          resume: "la bateau a coulé",
-          quantite: 2
-        },
-        {
-          id: 2,
-          titre: "eragon",
-          auteur: "thomas",
-          resume: "joli dragon",
-          quantite: 3
-        }
-      ];
-    }, 5000);
+    const APILivre = "http://localhost:3002/api/v1/micro-book/livre";
+    var headers = new Headers();
+    var param = {	
+      method: 'GET',	
+      headers: headers,	
+      mode: 'cors',	
+      cache: 'default'
+    };
+    fetch(APILivre, param).then((response)=>{	
+      return response.json();	
+    }).then((res)=>{
+      if(!res.success){
+        console.log("error get livre");
+        throw res.data;
+      }
+      console.log(res.data);
+      this.livres = res.data;
+    }).catch(function(error){
+      console.log(error);
+    });
   }
 })
 export default class Home extends Vue {}

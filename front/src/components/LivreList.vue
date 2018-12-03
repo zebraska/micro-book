@@ -9,7 +9,6 @@
         md-label="Aucun livre trouvé"
         :md-description="`Vous pouvez en ajouter un en cliquant sur le bouton ci-dessous.`"
       >
-        <md-button class="md-primary md-raised" @click="newBook">Ajouter un livre</md-button>
       </md-table-empty-state>
 
       <md-table-row slot="md-table-row" slot-scope="{ item }" md-selectable="single">
@@ -22,6 +21,7 @@
       </md-table-row>
     </md-table>
     {{selected}}
+    <md-button class="md-primary md-raised" @click="newBook">Ajouter un livre</md-button>
   </div>
 </template>
 
