@@ -21,6 +21,7 @@
           <img v-if="item.quantite != 0" class="borrow_icon" src="@/assets/borrow_book.png" @click.stop="borrow(item)">
           <img v-else class="borrow_icon" src="@/assets/borrow_book.png" style="opacity: .4;">
         </md-table-cell>
+        <md-table-cell md-label="DELETE"><font-awesome-icon icon="trash" size="2x" @click.stop="deleteLivre(item)"/></md-table-cell>
       </md-table-row>
     </md-table>
     {{selected}}
@@ -52,6 +53,31 @@ export default Vue.extend({
       this.$router.push({
         name: "borrowBook",
         params: { livre, id: livre.id }
+      });
+    },
+    deleteLivre(livre: Livre){
+      const APILivre = "http://localhost:3002/api/v1/micro-book/livre";
+      var headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      var param = {	
+        method: 'DELETE',	
+        headers: headers,	
+        mode: 'cors',	
+        cache: 'default',
+      };
+      var body={
+        id: livre.id
+      };
+      param.body=JSON.stringify(body);
+      fetch(APILivre, param).then((response)=>{	
+        return response.json();	
+      }).then((res)=>{
+        if(!res.success){
+          throw res.data;
+        }
+        this.livres=res.data
+      }).catch(function(error){
+        console.log(error);
       });
     }
   },
