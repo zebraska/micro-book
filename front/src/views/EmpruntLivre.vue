@@ -4,12 +4,12 @@
   <div md-card>
     <md-field>
       <label>Prenom</label>
-      <md-input></md-input>
+      <md-input v-model="prenom"></md-input>
     </md-field>
 
     <md-field>
       <label>Nom</label>
-      <md-input></md-input>
+      <md-input v-model="nom"></md-input>
     </md-field>
 
     <div>
@@ -17,7 +17,7 @@
       {{ livre.quantite }}
     </div>
 
-    <md-button class="md-raised md-primary">Valider</md-button>
+    <md-button class="md-raised md-primary" @click="borrowBook()">Valider</md-button>
   </div>
 </div>
 </template>
@@ -33,13 +33,41 @@ export default Vue.extend({
     }
   },
   data() {
-    return {};
+    return {
+        prenom: "",
+        nom: ""
+    };
   },
   methods: {
-    select(livre: Livre) {
-      this.selected = livre;
-    },
-    newBook() {}
+    borrowBook() {
+        const APIEmprunt = 'http://localhost:3000/api/v1/emprunt';
+        var headers = new Headers();	       
+        headers.append("Content-Type", "application/json");
+        var param = {	
+            method: 'POST',
+            headers: headers,
+            mode: 'cors',
+            cache: 'default',
+        };
+        var body={
+            livre: this.livre.id,
+            prenom: this.prenom,
+            nom: this.nom,
+        };
+        param.body=JSON.stringify(body);
+        fetch(APIEmprunt, param).then((response)=>{
+            console.log(response)
+            return response.json();
+        }).then((res)=>{
+            if(!res.success){
+            console.log("error post emprunt");
+            throw res.data;
+            }
+            this.$router.push({ name: "home" });
+        }).catch(function(error){
+            console.log(error);
+        });
+    }
   },
   props: ["livre"]
 });

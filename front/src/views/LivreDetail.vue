@@ -42,13 +42,13 @@ export default Vue.extend({
       this.selected = livre;
     },
     updateBook() {
-      const APILivre = "http://localhost:3002/api/v1/micro-book/livre";
+      const APIEmprunt = 'http://localhost:3000/api/v1/emprunt';
       var headers = new Headers();	       
       headers.append("Content-Type", "application/json");
       var param = {	
-        method: 'PUT',	
-        headers: headers,	
-        mode: 'cors',	
+        method: 'POST',
+        headers: headers,
+        mode: 'cors',
         cache: 'default',
       };
       var body={
@@ -59,9 +59,9 @@ export default Vue.extend({
         quantite:this.livre.quantite
       };
       param.body=JSON.stringify(body);
-      fetch(APILivre, param).then((response)=>{	
+      fetch(APILivre, param).then((response)=>{
         console.log(response)
-        return response.json();	
+        return response.json();
       }).then((res)=>{
         if(!res.success){
           console.log("error put livre");
