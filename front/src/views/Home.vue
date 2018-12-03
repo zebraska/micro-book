@@ -19,14 +19,6 @@ import axios, { AxiosResponse } from "axios";
     return { livres: [] };
   },
   created() {
-    // axios
-    //   .get("http://localhost:3002/api/v1/micro-book/livre")
-    //   .then((response: AxiosResponse<Livre[]>) => {
-    //     console.log(response);
-    //   })
-    //   .catch(error => {
-    //     // Handle error here
-    //   });
     const APILivre = "http://localhost:3002/api/v1/micro-book/livre";
     var headers = new Headers();
     var param = {	
@@ -39,10 +31,8 @@ import axios, { AxiosResponse } from "axios";
       return response.json();	
     }).then((res)=>{
       if(!res.success){
-        console.log("error get livre");
         throw res.data;
       }
-      console.log(res.data);
       this.livres = res.data;
     }).catch(function(error){
       console.log(error);

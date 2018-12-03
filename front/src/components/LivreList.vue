@@ -43,7 +43,7 @@ export default Vue.extend({
       });
     },
     newBook() {
-      this.$router.push({ name: "livre" });
+      this.$router.push({name: "livre" });
     },
     borrow(livre: Livre){
       this.$router.push({
