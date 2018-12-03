@@ -37,7 +37,7 @@ app.post(baseUriLivre, (req, response) => {
         return response.status(500).json({ success: false, data: 'missing parameter' });
     }
     if (data.quantite<0) {
-        return res.status(500).json({ success: false, data: 'quantite must be greater or equal than 0' });
+        return response.status(500).json({ success: false, data: 'quantite must be greater or equal than 0' });
     }
     return request({ url: APILivre, method: 'POST', json: data }, (err, res, body) => {
         if (err) {
@@ -58,7 +58,7 @@ app.put(baseUriLivre, (req, response) => {
         return response.status(500).json({ success: false, data: 'missing parameter' });
     }
     if (data.quantite<0) {
-        return res.status(500).json({ success: false, data: 'quantite must be greater or equal than 0' });
+        return response.status(500).json({ success: false, data: 'quantite must be greater or equal than 0' });
     }
     return request({ url: APILivre, method: 'PUT', json: data }, (err, res, body) => {
         if (err) {
