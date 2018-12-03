@@ -1,13 +1,19 @@
 #!/bin/bash
 
+# Variables d'environnement minikube
+eval $(minikube docker-env)
+
 # Lancement emprunt
 cd emprunt
-sudo docker-compose build --no-cache && sudo docker-compose up --force-recreate -d
+sudo kompose up
 
 # Lancement livre
 cd ../livre
-sudo docker-compose build --no-cache && sudo docker-compose up --force-recreate -d
+sudo kompose up
 
 # Lancement gateway
 cd ../gateway
-sudo docker-compose build --no-cache && sudo docker-compose up --force-recreate -d
+sudo kompose up
+
+# Affiche les informations
+kubectl get deployment,svc,pods,pvc

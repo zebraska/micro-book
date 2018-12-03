@@ -1,0 +1,18 @@
+# Installer kompose
+curl -L https://github.com/kubernetes/kompose/releases/download/v1.17.0/kompose-linux-amd64 -o kompose
+chmod +x kompose
+sudo mv ./kompose /usr/local/bin/kompose
+
+# Installer minikube
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 \
+  && sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+# Lancer les build.sh de chaque webservice
+./build.sh
+
+# Lancer "kompose up" pour chaque webservice
+./run_docker.sh
+
+# Arrête tous les services
+./stop_docker.sh
+
