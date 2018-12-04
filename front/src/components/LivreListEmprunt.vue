@@ -1,5 +1,9 @@
 <template>
   <div>
+    <md-snackbar :md-position="sb.position" :md-duration="sb.duration" :md-active.sync="sb.showSnackbar" md-persistent>
+    <span>{{sb.error}}</span>
+    <md-button class="md-primary" @click="sb.showSnackbar = false">Retry</md-button>
+  </md-snackbar>
     <md-table v-model="emprunts" md-sort="id" md-sort-order="asc" md-card>
       <md-table-empty-state
         md-label="Pas encore d'emprunt"
@@ -56,6 +60,32 @@ export default Vue.extend({
                 console.log("error post emprunt");
                 throw res.data;
             }
+            
+
+            const APIEmpruntLivre = 'http://localhost:3002/api/v1/micro-book/emprunt/byLivre?livre_id=' + this.livre.id;
+            var headers = new Headers();	       
+            headers.append("Content-Type", "application/json");
+            var param = {	
+                method: 'GET',
+                headers: headers,
+                mode: 'cors',
+                cache: 'default',
+            };
+            fetch(APIEmpruntLivre, param).then((response)=>{
+                return response.json();
+            }).then((res)=>{
+                if(!res.success){
+                    console.log("error post emprunt");
+                    throw res.data;
+                }
+                this.emprunts = res.data;
+            }).catch((error)=>{
+                this.sb.error=error;
+                this.sb.showSnackbar=true;
+                console.log(error);
+            });
+
+
         }).catch((error)=>{
             this.sb.error=error;
             this.sb.showSnackbar=true;
