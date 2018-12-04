@@ -11,7 +11,7 @@
         <md-table-cell md-label="ID" md-numeric md-sort-by="id">{{item.id}}</md-table-cell>
         <md-table-cell md-label="PRENOM LOCATAIRE" md-sort-by="prenom">{{item.prenom}}</md-table-cell>
         <md-table-cell md-label="NOM LOCATAIRE" md-sort-by="nom">{{item.nom}}</md-table-cell>
-        <md-table-cell md-label="DELETE"><font-awesome-icon icon="trash" size="2x" @click.stop="endEmprunt(item)"/></md-table-cell>
+        <md-table-cell md-label="RETOUR" :style="{cursor: 'pointer'}"><font-awesome-icon icon="arrow-circle-left" size="2x" @click.stop="endEmprunt(item)"/></md-table-cell>
       </md-table-row>
     </md-table>
     <md-button class="md-primary md-raised" @click="newEmprunt">Créer un nouvel emprunt</md-button>
