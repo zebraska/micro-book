@@ -1,5 +1,9 @@
 <template>
   <div>
+    <md-snackbar :md-position="sb.position" :md-duration="sb.duration" :md-active.sync="sb.showSnackbar" md-persistent>
+    <span>{{sb.error}}</span>
+    <md-button class="md-primary" @click="sb.showSnackbar = false">Retry</md-button>
+  </md-snackbar>
     <md-table v-model="emprunts" md-sort="id" md-sort-order="asc" md-card>
       <md-table-empty-state
         md-label="Pas encore d'emprunt"
