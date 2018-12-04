@@ -3,15 +3,15 @@ let chaiHttp = require('chai-http');
 let server = require('./index');
 let should = chai.should();
 
-//script a executer sur nouvelle table
+
 chai.use(chaiHttp);
 /*
   * Test the /GET route
   */
-describe('/GET emprunt', () => {
-    it('devrait retourner tous les emprunts', (done) => {
+describe('/GET livre', () => {
+    it('devrait retourner tous les livres', (done) => {
         chai.request(server)
-            .get('/api/v1/emprunt')
+            .get('/api/v1/livre')
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
@@ -21,12 +21,17 @@ describe('/GET emprunt', () => {
     });
 });
 
-describe('/POST emprunt', () => {
-    it('devrait add un emprunt et tous les retourner', (done) => {
-        let emprunt = { nom: "LE BRIS", prenom: "Jules", livre: 1 };
+describe('/POST livre', () => {
+    it('devrait add un livre et tous les retourner', (done) => {
+        let livre = {
+            titre:"titanic",
+            auteur:"auteur",
+            resume:"resume",
+            quantite:2
+          };
         chai.request(server)
-            .post('/api/v1/emprunt')
-            .send(JSON.stringify(emprunt))
+            .post('/api/v1/livre')
+            .send(JSON.stringify(livre))
             .set('content-type', 'application/json')
             .end((err, res) => {
                 res.should.have.status(200);
@@ -37,11 +42,11 @@ describe('/POST emprunt', () => {
                 done();
             });
     });
-    it('missing parameter on POST', (done) => {
-        let emprunt = { nom: "LE BRIS", prenom: "Jules" };
+    it('missing parameter on post', (done) => {
+        let livre = { nom: "LE BRIS", prenom: "Jules" };
         chai.request(server)
-            .post('/api/v1/emprunt')
-            .send(JSON.stringify(emprunt))
+            .post('/api/v1/livre')
+            .send(JSON.stringify(livre))
             .set('content-type', 'application/json')
             .end((err, res) => {
                 res.should.have.status(500);
@@ -52,28 +57,40 @@ describe('/POST emprunt', () => {
     });
 });
 
-describe('/PUT emprunt', () => {
-    it('devrait modifier un emprunt et tous les retourner', (done) => {
-        let emprunt = { id: 1, nom: "LE BRIS", prenom: "THOMAS", livre: 1 };
+describe('/PUT livre', () => {
+    it('devrait modifier un livre et tous les retourner', (done) => {
+        let livre = {
+            id:1,
+            titre:"titanic",
+            auteur:"auteur",
+            resume:"resume2",
+            quantite:2
+          };
         chai.request(server)
-            .put('/api/v1/emprunt')
-            .send(JSON.stringify(emprunt))
+            .put('/api/v1/livre')
+            .send(JSON.stringify(livre))
             .set('content-type', 'application/json')
             .end((err, res) => {
+                console.log(res.body)
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.success.should.be.eql(true);
                 res.body.data.should.be.a("array");
                 res.body.data.length.should.be.eql(1);
-                res.body.data[0].prenom.should.be.eql("THOMAS");
+                res.body.data[0].resume.should.be.eql("resume2");
                 done();
             });
     });
-    it('missing parameter on PUT', (done) => {
-        let emprunt = { nom: "LE BRIS", prenom: "Jules" };
+    it('missing parameter on put', (done) => {
+        let livre = {
+            titre:"titanic",
+            auteur:"auteur",
+            resume:"resume",
+            quantite:2
+          };
         chai.request(server)
-            .put('/api/v1/emprunt')
-            .send(JSON.stringify(emprunt))
+            .put('/api/v1/livre')
+            .send(JSON.stringify(livre))
             .set('content-type', 'application/json')
             .end((err, res) => {
                 res.should.have.status(500);
@@ -84,12 +101,12 @@ describe('/PUT emprunt', () => {
     });
 });
 
-describe('/DELETE emprunt', () => {
-    it('devrait supprimer un emprunt et tous les retourner', (done) => {
-        let emprunt = { id: 1 };
+describe('/DELETE livre', () => {
+    it('devrait supprimer un livre et tous les retourner', (done) => {
+        let livre = { id: 1 };
         chai.request(server)
-            .delete('/api/v1/emprunt')
-            .send(JSON.stringify(emprunt))
+            .delete('/api/v1/livre')
+            .send(JSON.stringify(livre))
             .set('content-type', 'application/json')
             .end((err, res) => {
                 res.should.have.status(200);
@@ -101,10 +118,10 @@ describe('/DELETE emprunt', () => {
             });
     });
     it('missing parameter on delete', (done) => {
-        let emprunt = {};
+        let livre = {};
         chai.request(server)
-            .delete('/api/v1/emprunt')
-            .send(JSON.stringify(emprunt))
+            .delete('/api/v1/livre')
+            .send(JSON.stringify(livre))
             .set('content-type', 'application/json')
             .end((err, res) => {
                 res.should.have.status(500);
